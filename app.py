@@ -18,7 +18,6 @@ def get_connection():
     return conn
 
 def getAllStudents():
-    """Retrieve and print all students."""
     with get_connection() as conn, conn.cursor(cursor_factory=RealDictCursor) as cur:
         cur.execute("""
             SELECT student_id, first_name, last_name, email, enrollment_date
@@ -38,12 +37,6 @@ def getAllStudents():
         return rows
 
 def addStudent(first_name, last_name, email, enrollment_date):
-    """
-    Insert a new student.
-    - first_name/last_name/email are required (email must be unique)
-    - enrollment_date can be None or 'YYYY-MM-DD'
-    Returns the new student_id.
-    """
     with get_connection() as conn, conn.cursor() as cur:
         cur.execute(
             """
@@ -59,7 +52,6 @@ def addStudent(first_name, last_name, email, enrollment_date):
         return new_id
 
 def updateStudentEmail(student_id, new_email):
-    """Update email for the given student_id. Returns 1 on success, 0 if not found."""
     with get_connection() as conn, conn.cursor() as cur:
         cur.execute(
             "UPDATE students SET email = %s WHERE student_id = %s RETURNING student_id;",
@@ -75,7 +67,6 @@ def updateStudentEmail(student_id, new_email):
         return 1
 
 def deleteStudent(student_id):
-    """Delete the student with the given id. Returns 1 on success, 0 if not found."""
     with get_connection() as conn, conn.cursor() as cur:
         cur.execute("DELETE FROM students WHERE student_id = %s RETURNING student_id;", (student_id,))
         row = cur.fetchone()
@@ -134,4 +125,5 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
+
     main()
